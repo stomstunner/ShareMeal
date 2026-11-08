@@ -41,7 +41,12 @@ export default function FoodCard({ item, onExpired }) {
         {item.description && <p className="food-description">{item.description}</p>}
         <button className={claimed ? "claim-button claimed" : "claim-button"} onClick={async () => {
           if (!localStorage.getItem("sharemeal_token")) { window.history.pushState({}, "", "/login"); window.dispatchEvent(new PopStateEvent("popstate")); return; }
-          try { if (item._id) await apiRequest("/requests", { method: "POST", body: JSON.stringify({ foodListingId: item._id }) }); setClaimed(true); } catch { setClaimed(true); }
+          try {
+            if (item._id) await apiRequest("/requests", { method: "POST", body: JSON.stringify({ foodListingId: item._id }) });
+            setClaimed(true);
+          } catch (requestError) {
+            window.alert(requestError.message);
+          }
         }}>
           {claimed ? "Request sent ✓" : "Claim this food"} {!claimed && <ArrowUpRight size={16} />}
         </button>

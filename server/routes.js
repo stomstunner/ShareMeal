@@ -140,6 +140,18 @@ adminRouter.get("/listings", requireAuth, requireAdmin, async (_req, res, next) 
   } catch (error) { return next(error); }
 });
 
+adminRouter.get("/requests", requireAuth, requireAdmin, async (_req, res, next) => {
+  try {
+    await connectDatabase();
+    const requests = await Request.find({})
+      .populate("foodListingId")
+      .populate("recipientId", "name email image")
+      .populate("donorId", "name email image")
+      .sort({ createdAt: -1 });
+    return res.json(requests);
+  } catch (error) { return next(error); }
+});
+
 adminRouter.patch("/listings/:id", requireAuth, requireAdmin, async (req, res, next) => {
   try {
     await connectDatabase();
