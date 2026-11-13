@@ -18,7 +18,25 @@ PORT=5000
 CLIENT_URL=http://localhost:5173
 MONGODB_URI=your-mongodb-connection-string
 SESSION_SECRET=your-session-secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+GOOGLE_SUCCESS_REDIRECT=http://localhost:5173/
 ```
+
+### Google login setup
+
+In Google Cloud Console, open **APIs & Services > Credentials**, edit the OAuth 2.0 Client ID, and add this exact value under **Authorized redirect URIs**:
+
+```text
+http://localhost:5000/api/auth/google/callback
+```
+
+Also add this under **Authorized JavaScript origins**:
+
+```text
+http://localhost:5173
+```
+
+Open the app using <http://localhost:5173> (not `127.0.0.1`) so the local URLs stay consistent. Google OAuth will show `redirect_uri_mismatch` until the exact callback URI above is saved in Google Cloud Console.
 
 ## Run frontend only
 

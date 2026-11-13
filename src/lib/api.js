@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:5000/api`;
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export async function apiRequest(path, options = {}) {
   const headers = { ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }), ...options.headers };
