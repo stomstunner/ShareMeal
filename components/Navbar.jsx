@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "./Link";
-import { ArrowRight, Leaf, Menu, X } from "lucide-react";
+import { ArrowRight, Leaf, LogOut, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSessionUser } from "../src/lib/api";
 
@@ -14,6 +14,16 @@ export default function Navbar() {
     window.addEventListener("sharemeal-auth", refresh);
     return () => window.removeEventListener("sharemeal-auth", refresh);
   }, []);
+  function logout() {
+    localStorage.removeItem("sharemeal_token");
+    setOpen(false);
+    setUser(null);
+    window.dispatchEvent(new Event("sharemeal-auth"));
+    if (window.location.pathname !== "/") {
+      window.history.pushState({}, "", "/");
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    }
+  }
   const links = [
     ["Home", "/"],
     ["Browse food", "/explore"],
@@ -37,7 +47,7 @@ export default function Navbar() {
           ))}
           <span className="nav-divider" />
           {user ? <Link className="user-chip" href={user.role === "ADMIN" ? "/admin" : user.role ? "/dashboard" : "/onboarding/role"}>{user.image ? <img src={user.image} alt="" /> : <span>{user.name?.[0] || "U"}</span>}<b>{user.name?.split(" ")[0] || "Account"}</b></Link> : <Link className="login-link" href="/login">Log in</Link>}
-          {user ? <Link className="button button-small" href="/donate">Share food <ArrowRight size={15} /></Link> : <Link className="button button-small" href="/register">Get started <ArrowRight size={15} /></Link>}
+          {user ? <><Link className="button button-small" href="/donate">Share food <ArrowRight size={15} /></Link><button className="logout-nav-button" type="button" onClick={logout}><LogOut size={15} /> Log out</button></> : <Link className="button button-small" href="/register">Get started <ArrowRight size={15} /></Link>}
         </nav>
       </div>
     </header>
